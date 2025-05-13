@@ -1,0 +1,79 @@
+﻿@{
+    var code = ViewBag.code;
+}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const code = "@Html.Raw(ViewBag.code)";
+        const tokenURL = `https://staging.digitaltrusttech.com:44319/api/Authentication/token`;
+
+        const myHeaders = new Headers();
+        myHeaders.append("UgPassAuthorization", "Basic M05UZzlGMkxNcGdwMFlKcTE3YkZQNlFvVlNIZTBnVVlOZVBXcmhjMHU0a3VKVFNsOktYWU5BeTJVWTJoZjFFU21NbzNwc1JEbldBTURGNTNvRXBMdTVVYTVjbWdTanNVQUJzS3lvalc4azgzTzl5MkM=");
+        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+        const urlencoded = new URLSearchParams();
+        urlencoded.append("code", code);
+        urlencoded.append("client_id", "3NTg9F2LMpgp0YJq17bFP6QoVSHe0gUYNePWrhc0u4kuJTSl");
+        urlencoded.append("redirect_uri", "http://localhost:5093/Hotels/Callback");
+        urlencoded.append("grant_type", "authorization_code");
+
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: urlencoded,
+            redirect: "follow"
+        };
+
+        fetch(tokenURL, requestOptions)
+            .then((response) => response.json())
+            .then((result) => {
+                localStorage.setItem("access_token", result.access_token);
+
+                return fetch("https://staging.digitaltrusttech.com:44319/api/UserInfo/userinfo", {
+                    method: "GET",
+                    headers: {
+                        "UgPassAuthorization": `Bearer ${result.access_token}`
+                    }
+                });
+            })
+            .then(response => response.json())  
+            .then((data) => {
+                console.log("User data from IDP:", data);
+                const claims = data.daes_claims;
+
+                const mappedUser = {
+                    email:claims.email,
+                    name: claims.name?.trim(),
+                    gender: claims.gender,
+                    birthdate: claims.birthdate,
+                    phone:claims.phone,
+                    suid: claims.suid,
+                    id_document_number: claims.id_document_number,
+                    id_document_type: claims.id_document_type,
+                    country:claims.country
+                };
+
+                if (!mappedUser.email) {
+                    console.error("Email is missing in the user data:", data);
+                    return;
+                }
+
+                fetch("/Account/ExternalLoginCallback", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(mappedUser)
+                })
+                .then((res) => {
+                    if (res.ok) {
+                        window.location.href = "/Dashboard/CustomerDashboard";
+                    } else {
+                        console.error("Server login failed.");
+                    }
+                })
+                .catch(err => console.error("Error in sending mappedUser to backend:", err));
+            })
+            .catch(err => console.error("Error during token or userinfo fetch:", err));
+    }); // ✅ close document.addEventListener
+
+</script>

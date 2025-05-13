@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">Welcome, Admin!</h2>
+        <p class="lead">Manage hotels, rooms, and user bookings from this dashboard.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Add New Hotel</h5>
+                    <p class="card-text">Create a new hotel entry in the system.</p>
+                    <a class="btn btn-success w-100" href="/Hotels/Create">Add Hotel</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Manage Hotels</h5>
+                    <p class="card-text">View, edit, or delete existing hotels and rooms.</p>
+                    <a class="btn btn-secondary w-100" href="/Hotels/Index">Manage Hotels</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">All Bookings</h5>
+                    <p class="card-text">View all user bookings and guest details.</p>
+                    <a class="btn btn-primary w-100" href="/Bookings/AllBookings">View Bookings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

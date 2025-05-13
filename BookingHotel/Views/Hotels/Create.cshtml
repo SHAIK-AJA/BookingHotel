@@ -1,0 +1,45 @@
+﻿ @model BookingHotel.Models.Entities.Hotel
+
+@{
+    ViewData["Title"] = "Create Hotel";
+}
+
+<div class="container mt-5">
+    <h2>Create a New Hotel</h2>
+    <hr />
+
+    <form asp-action="Create" method="post" class="needs-validation" novalidate>
+        <div class="form-group mb-3">
+            <label asp-for="Name" class="form-label">Hotel Name</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Location" class="form-label">Location</label>
+            <input asp-for="Location" class="form-control" />
+            <span asp-validation-for="Location" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Description" class="form-label">Description</label>
+            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="ImageUrl" class="form-label">Image URL (optional)</label>
+            <input asp-for="ImageUrl" class="form-control" />
+            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Hotel</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

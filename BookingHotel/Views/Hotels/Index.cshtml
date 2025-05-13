@@ -1,0 +1,37 @@
+﻿@model IEnumerable<BookingHotel.Models.Entities.Hotel>
+
+@{
+    ViewData["Title"] = "Hotels";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4">Available Hotels</h2>
+    <div class="row">
+        @foreach (var hotel in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <img src="@hotel.ImageUrl" class="card-img-top" style="height:200px; object-fit:cover;" alt="@hotel.Name">
+                    <div class="card-body">
+                        <h5 class="card-title">@hotel.Name</h5>
+                        <p class="card-text">@hotel.Location</p>
+                        <p class="card-text text-muted">@hotel.Description.Substring(0, Math.Min(180, hotel.Description.Length))...</p>
+                        <a asp-action="Details" asp-route-id="@hotel.Id" class="btn btn-sm btn-outline-primary">View</a>
+                        @*  @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@hotel.Id" class="btn btn-sm btn-outline-warning">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@hotel.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                        }*@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-primary mt-4">Add New Hotel</a>
+    }
+</div>
+<script>
+
+</script>

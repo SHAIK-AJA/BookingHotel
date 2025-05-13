@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Customer Dashboard";
+}
+
+<style>
+    body {
+        background: linear-gradient(to right, #e3f2fd, #ffffff);
+        min-height: 100vh;
+    }
+
+    .dashboard-container {
+        margin-top: 60px;
+    }
+
+    .welcome-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+    }
+
+        .welcome-card h2 {
+            color: #007bff;
+        }
+
+        .welcome-card p {
+            font-size: 1.2rem;
+            color: #555;
+        }
+</style>
+ 
+<div class="container dashboard-container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="welcome-card text-center">
+                <h2>Welcome, Customer! 👋</h2>
+                <p>Explore our top-rated hotels and book your next stay with ease.</p>
+                <a class="btn btn-info btn-lg mt-3" href="/Hotels/Index">Browse Hotels</a>
+                <a class="btn btn-info btn-lg mt-3" href="/Bookings/MyBookings">  View All My Bookings</a>
+            </div>
+        </div>
+    </div>
+</div>

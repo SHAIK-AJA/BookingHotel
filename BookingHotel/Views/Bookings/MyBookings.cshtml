@@ -1,0 +1,39 @@
+﻿@model IEnumerable<BookingHotel.Models.Entities.Booking>
+
+@foreach (var booking in Model)
+{
+    var days = (booking.CheckOutDate - booking.CheckInDate).Days;
+    if (days == 0) { days = 1; }
+
+    // Safely calculate total price
+    var pricePerNight = booking.Room?.PricePerNight ?? 0;
+    var totalPrice = days * pricePerNight * booking.NoOfPersons;
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <strong>Room Type:</strong> @booking.Room?.Type
+        </div>
+        <div class="card-body">
+            <p><strong>Hotel Name:</strong>@booking.Room.Hotel.Name</p>
+            <p><strong>Room No:</strong>@booking.Room?.RoomNo</p>
+            <p><strong>Check-in:</strong> @booking.CheckInDate.ToShortDateString()</p>
+            <p><strong>Check-out:</strong> @booking.CheckOutDate.ToShortDateString()</p>
+            <p><strong>No of Days:</strong> @days</p>
+            <p><strong>No of Persons:</strong> @booking.NoOfPersons</p>
+            <p><strong> Booked Date: </strong>@booking.BookingDate</p>
+            <h5>Guests Info:</h5>
+            <ul>
+                @foreach (var guest in booking.PersonDetails)
+                {
+                    <li>@guest.Name (@guest.Gender)</li>
+                }
+            </ul>
+
+            <p><strong>Total Price:</strong> @totalPrice.ToString("C")</p>
+        </div>
+    </div>
+}
+<a class="btn btn-primary" href="/Hotels/Index"> Back to Hotels</a>
+<form asp-controller="Account" asp-action="Logout" method="post">
+    <button type="submit" class="btn btn-Info">Logout</button>
+</form>

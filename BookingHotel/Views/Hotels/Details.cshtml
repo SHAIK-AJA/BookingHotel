@@ -1,0 +1,130 @@
+﻿@model BookingHotel.Models.Entities.Hotel
+@{
+    ViewData["Title"] = "Hotel Details";
+}
+
+<h2 class="mb-3">@Model.Name</h2>
+<div class="row mb-4">
+    <div class="col-md-4">
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <img src="@Model.ImageUrl" class="img-fluid rounded shadow-sm" alt="Hotel Image" />
+        }
+        else
+        {
+            <div class="bg-secondary text-white text-center p-5 rounded">No Image</div>
+        }
+    </div>
+    <div class="col-md-8">
+        <p><strong>Location:</strong> @Model.Location</p>
+        <p><strong>Description:</strong> @Model.Description</p>
+    </div>
+</div>
+
+@if (User.IsInRole("Admin"))
+{
+    <a href="@Url.Action("Create", "Rooms", new { hotelId = Model.Id })" class="btn btn-primary mb-3">Add New Room</a>
+}  
+
+<h4>Rooms Available</h4>
+
+@if (Model.Rooms != null && Model.Rooms.Any())
+{
+    <div class="row">
+        @foreach (var room in Model.Rooms)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    @if (!string.IsNullOrEmpty(room.Hotel?.ImageUrl))
+                    {
+                        <img src="@room.ImageUrl" class="card-img-top" alt="Room Image" />
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@room.Type</h5>
+                        <p class="card-text">Price per Night: @room.PricePerNight.ToString("C")</p>
+                        <p class="card-text">Room Number:@room.RoomNo</p>
+                        <p class="card-text">Rating: @room.Rating</p>
+                        <p class="card-text">
+                            @if (room.IsAvailable)
+                            {
+                                <span class="badge bg-success">Available</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Booked</span>
+                            }
+                        </p>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="d-flex justify-content-between">
+                                <a href="@Url.Action("Edit", "Rooms", new { id = room.Id })" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="@Url.Action("Delete", "Rooms", new { id = room.Id })" class="btn btn-danger btn-sm">Delete</a>
+                            </div>
+                        }
+                        @if (!User.IsInRole("Admin") && room.IsAvailable)
+                        {
+                            <a asp-controller="Bookings" asp-action="Create" asp-route-roomId="@room.Id" class="btn btn-primary">
+                                Book Now
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p class="text-muted">No rooms found for this hotel.</p>
+}
+
+<a asp-action="Index" class="btn btn-secondary mt-3">Back to List</a>
+@section Scripts{
+<script>
+         (async () => {
+    const params = new URLSearchParams(window.location.search);
+
+          const auth_code = params.get("code");
+          console.log(auth_code);
+
+          const myHeaders = new Headers();
+          myHeaders.append("UgPassAuthorization", "Basic M05UZzlGMkxNcGdwMFlKcTE3YkZQNlFvVlNIZTBnVVlOZVBXcmhjMHU0a3VKVFNsOktYWU5BeTJVWTJoZjFFU21NbzNwc1JEbldBTURGNTNvRXBMdTVVYTVjbWdTanNVQUJzS3lvalc4azgzTzl5MkM=");
+          myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+          const urlencoded = new URLSearchParams();
+          urlencoded.append("code", auth_code);
+          urlencoded.append("client_id", "3NTg9F2LMpgp0YJq17bFP6QoVSHe0gUYNePWrhc0u4kuJTSl");
+          urlencoded.append("redirect_uri", "http://localhost:5093/Hotels/Details");
+          urlencoded.append("grant_type", "authorization_code");
+
+          const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: urlencoded,
+            redirect: "follow"
+          };
+
+          fetch("https://staging.digitaltrusttech.com:44319/api/Authentication/token", requestOptions)
+            .then((response) => response.json())
+            .then((result) => {
+              localStorage.setItem("access_token",result.access_token)
+              fetch("https://staging.digitaltrusttech.com:44319/api/UserInfo/userinfo",{
+                  method:"GET",
+                  headers:{
+                      "UgPassAuthorization":Bearer ${result.access_token}
+                  }
+              })
+              .then((res)=>res.json())
+              .then((data)=>{
+                  localStorage.setItem("user_data",data);
+                  document.getElementById("username").textContent = data.name
+              })
+              .catch((err)=>console.error(err))
+
+            })
+            .catch((error) => console.error(error));
+                 document.getElementById("status").innerText = "Token exchange failed.";
+            })();
+</script>
+}

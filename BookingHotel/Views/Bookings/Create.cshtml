@@ -1,0 +1,81 @@
+﻿@using BookingHotel.Models.Entities
+@model BookingViewModel
+
+<form asp-action="Create" method="post">
+    <div>
+        <h4>Room Type: <strong>@Model.Room?.Type</strong></h4>
+        <input type="hidden" asp-for="RoomId" />
+    </div>
+
+    <div>
+        <label asp-for="CheckInDate"></label>
+        <input asp-for="CheckInDate" class="form-control" type="date" />
+        <span asp-validation-for="CheckInDate" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="CheckOutDate"></label>
+        <input asp-for="CheckOutDate" class="form-control" type="date" />
+        <span asp-validation-for="CheckOutDate" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="NoOfPersons"></label>
+        <input asp-for="NoOfPersons" class="form-control" id="noOfPersonsInput" />
+        <span asp-validation-for="NoOfPersons" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label>Total Price</label>
+        <input class="form-control" value="@Model.TotalPrice.ToString("C")" readonly />
+    </div>
+
+    <div>
+        <h5>Guests Info</h5>
+        <div id="guestDetailsContainer">
+         </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Book Now</button>
+</form>
+
+@section Scripts {
+    <script>
+        document.getElementById('noOfPersonsInput').addEventListener('input', function () {
+            const count = parseInt(this.value) || 0;
+            const container = document.getElementById('guestDetailsContainer');
+            container.innerHTML = '';
+
+            for (let i = 0; i < count; i++) {
+                container.innerHTML += `
+                    <div class="mb-3">
+                        <label>Name</label>
+                        <input name="PersonDetails[${i}].Name" class="form-control" />
+
+                        <label>Gender</label>
+                        <select name="PersonDetails[${i}].Gender" class="form-control">
+                            <option value="">Select</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                `;
+            }
+        });
+    </script>
+}
+<script>
+    document.getElementById('noOfPersonsInput').addEventListener('input',function(){
+        const count=parseInt(this.value) || 0;
+        const container=document.getElementById('guestDetailContainer');
+        container.innerHTML='';
+        for(let i=0;i<count;i++){
+             container.innerHTML+=
+             <div class="mb-3">
+             <
+             </div>
+        }
+
+    }
+</script>

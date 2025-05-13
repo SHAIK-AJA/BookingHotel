@@ -1,0 +1,39 @@
+﻿@model BookingHotel.Models.Entities.Room
+
+@{
+    ViewData["Title"] = "Delete Room";
+}
+
+<h2>Delete Room</h2>
+
+<div class="alert alert-warning">
+    <strong>Are you sure you want to delete this room?</strong>
+</div>
+
+<dl class="row">
+    <dt class="col-sm-2">Type</dt>
+    <dd class="col-sm-10">@Model.Type</dd>
+
+    <dt class="col-sm-2">Price/Night</dt>
+    <dd class="col-sm-10">@Model.PricePerNight</dd>
+
+    <dt class="col-sm-2">Rating</dt>
+    <dd class="col-sm-10">@Model.Rating</dd>
+
+    <dt class="col-sm-2">Hotel</dt>
+    <dd class="col-sm-10">@Model.Hotel?.Name</dd>
+
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <dt class="col-sm-2">Image</dt>
+        <dd class="col-sm-10">
+            <img src="@Model.ImageUrl" alt="Room Image" class="img-thumbnail" style="max-height: 200px;" />
+        </dd>
+    }
+</dl>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
